@@ -1,0 +1,28 @@
+php:
+  image: anthonymrodrigues/php-7.0:1.0
+  #command: bash -c "sed -i \"s/memory_limit = 128M/memory_limit = 512M/\" /usr/local/etc/php/php.ini && sed -i \"s/short_open_tag = Off/short_open_tag = On/\" /usr/local/etc/php/php.ini && sed -i \"s/max_execution_time = 30/max_execution_time =0/\" /usr/local/etc/php/php.ini && php-fpm"
+  #ports:
+   #- "9000:9000"
+  volumes:
+   #- ../docker/php:/usr/local/etc/php/conf.d
+   #- ../docker/php/extensions:/usr/local/lib/php/extensions/no-debug-non-zts-20151012
+   - ./:/var/www/html/
+   -  /usr/bin/ssh:/usr/bin/ssh
+  links:
+     - mysql:localhost_mysql
+  environment:
+   - XDEBUG_CONFIG=remote_host=172.17.0.1
+   - PHP_IDE_CONFIG=serverName=local
+  ports:
+   - "80:80"
+
+mysql:
+  image: mysql:5.6
+  volumes:
+   - ../bases:/bases
+   - ../volumes/mysql:/var/lib/mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: my-secret_pw
+    MYSQL_DATABASE: lamp
+    MYSQL_USER:  lamp_user
+    MYSQL_PASSWORD: lamp_pass
